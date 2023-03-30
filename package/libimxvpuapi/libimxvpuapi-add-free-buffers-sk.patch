@@ -1,0 +1,12 @@
+diff -uprN libimxvpuapi/imxvpuapi/imxvpuapi_vpulib.c libimxvpuapi-sk/imxvpuapi/imxvpuapi_vpulib.c
+--- libimxvpuapi/imxvpuapi/imxvpuapi_vpulib.c	2015-11-30 13:23:12.000000000 +0300
++++ libimxvpuapi-sk/imxvpuapi/imxvpuapi_vpulib.c	2015-12-12 19:56:07.685073179 +0300
+@@ -57,7 +57,7 @@
+ #define TO_BOOL(X) ((X) ? TRUE : FALSE)
+ 
+ 
+-#define MIN_NUM_FREE_FB_REQUIRED 5
++#define MIN_NUM_FREE_FB_REQUIRED 12
+ #define FRAME_ALIGN 16
+ 
+ #define VPU_MEMORY_ALIGNMENT         0x8

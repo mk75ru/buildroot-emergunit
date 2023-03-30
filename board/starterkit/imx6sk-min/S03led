@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+	#LED indicator - GPIO2.12
+	echo 44 > /sys/class/gpio/export
+	echo out > /sys/class/gpio/gpio44/direction
+	echo 0 > /sys/class/gpio/gpio44/value
+	;;
+  stop)
+	;;
+  restart|reload)
+	$0" stop
+	$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

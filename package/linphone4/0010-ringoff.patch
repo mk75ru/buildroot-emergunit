@@ -1,0 +1,75 @@
+--- a/coreapi/ringtoneplayer.c
++++ b/coreapi/ringtoneplayer.c
+@@ -96,7 +96,7 @@
+ 		ms_message("Starting local ringtone...");
+ 		rp->end_of_ringtone = end_of_ringtone;
+ 		rp->end_of_ringtone_ud = user_data;
+-		rp->ringstream=ring_start_with_cb(factory, ringtone,loop_pause_ms,card,notify_end_of_ringtone,rp);
++		rp->ringstream=0;//ring_start_with_cb(factory, ringtone,loop_pause_ms,card,notify_end_of_ringtone,rp);
+ 		return rp->ringstream != NULL ? 0 : 1;
+ 	}
+ 	return 3;
+--- a/src/call/call.cpp
++++ b/src/call/call.cpp
+@@ -208,7 +208,7 @@
+ 	}
+ 	if (lc->sound_conf.remote_ring) {
+ 		ms_snd_card_set_stream_type(ringCard, MS_SND_CARD_STREAM_VOICE);
+-		lc->ringstream = ring_start(lc->factory, lc->sound_conf.remote_ring, 2000, ringCard);
++		lc->ringstream = 0;//ring_start(lc->factory, lc->sound_conf.remote_ring, 2000, ringCard);
+ 	}
+ }
+ 
+--- a/src/conference/session/tone-manager.cpp
++++ b/src/conference/session/tone-manager.cpp
+@@ -410,7 +410,7 @@
+ 
+ 	if (lc->sound_conf.remote_ring) {
+ 		ms_snd_card_set_stream_type(ringCard, MS_SND_CARD_STREAM_VOICE);
+-		lc->ringstream = ring_start(lc->factory, lc->sound_conf.remote_ring, 2000, ringCard);
++		lc->ringstream = 0;//ring_start(lc->factory, lc->sound_conf.remote_ring, 2000, ringCard);
+ 	}
+ }
+ 
+@@ -594,23 +594,24 @@
+ 		ring_stop(lc->ringstream);
+ 		lc->ringstream = NULL;
+ 	}
+-	if (lc->ringstream == NULL) {
+-		float amp = lp_config_get_float(lc->config, "sound", "dtmf_player_amp", 0.1f);
+-		MSSndCard *ringcard = lc->sound_conf.lsd_card
+-			? lc->sound_conf.lsd_card
+-			: card
+-				? card
+-				: lc->sound_conf.ring_sndcard;
+-
+-		if (ringcard == NULL) return NULL;
+-		if (!create) return NULL;
+-
+-		ms_snd_card_set_stream_type(ringcard, MS_SND_CARD_STREAM_DTMF);
+-		ringstream = lc->ringstream = ring_start(lc->factory, NULL, 0, ringcard);
+-		ms_filter_call_method(lc->ringstream->gendtmf, MS_DTMF_GEN_SET_DEFAULT_AMPLITUDE, &amp);
+-	} else {
+-		ringstream = lc->ringstream;
+-	}
++	// if (lc->ringstream == NULL) {
++	// 	float amp = lp_config_get_float(lc->config, "sound", "dtmf_player_amp", 0.1f);
++	// 	MSSndCard *ringcard = lc->sound_conf.lsd_card
++	// 		? lc->sound_conf.lsd_card
++	// 		: card
++	// 			? card
++	// 			: lc->sound_conf.ring_sndcard;
++
++	// 	if (ringcard == NULL) return NULL;
++	// 	if (!create) return NULL;
++
++	// 	ms_snd_card_set_stream_type(ringcard, MS_SND_CARD_STREAM_DTMF);
++	// 	ringstream = lc->ringstream = ring_start(lc->factory, NULL, 0, ringcard);
++	// 	ms_filter_call_method(lc->ringstream->gendtmf, MS_DTMF_GEN_SET_DEFAULT_AMPLITUDE, &amp);
++	// } else {
++		ringstream = lc->ringstream = 0;
++		return NULL;
++	// }
+ 	if (rtype == ToneGenerator) return ringstream->gendtmf;
+ 	if (rtype == LocalPlayer) return ringstream->source;
+ 	return NULL;

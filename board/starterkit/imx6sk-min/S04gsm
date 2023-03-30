@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+	#GSM power enable - GPIO2.16
+	echo 48 > /sys/class/gpio/export
+	echo out > /sys/class/gpio/gpio48/direction
+	echo 1 > /sys/class/gpio/gpio48/value
+	;;
+  stop)
+	;;
+  restart|reload)
+	$0" stop
+	$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

@@ -1,2 +1,2 @@
 # buildroot-emergunit
-emergunit  buildroot
+emergunit buildroot

@@ -1,0 +1,42 @@
+################################################################################
+#
+# bctoolbox4
+#
+################################################################################
+
+BCTOOLBOX4_VERSION = 4.4.8
+BCTOOLBOX4_SITE = $(call github,BelledonneCommunications,bctoolbox,$(BCTOOLBOX4_VERSION))
+BCTOOLBOX4_LICENSE = GPL-3.0+
+BCTOOLBOX4_LICENSE_FILES = LICENSE.txt
+BCTOOLBOX4_INSTALL_STAGING = YES
+
+# Set CMAKE_SKIP_RPATH to prevent bctoolbox from adding the rpath to
+# shared library.
+BCTOOLBOX4_CONF_OPTS = \
+	-DENABLE_POLARSSL=OFF \
+	-DENABLE_STRICT=OFF \
+	-DENABLE_TESTS_COMPONENT=OFF \
+	-DENABLE_TESTS=OFF \
+	-DCMAKE_SKIP_RPATH=ON
+
+ifeq ($(BR2_PACKAGE_LIBICONV),y)
+BCTOOLBOX4_DEPENDENCIES += libiconv
+BCTOOLBOX4_CONF_OPTS += -DCMAKE_CXX_FLAGS="$(TARGET_CXXFLAGS) -liconv"
+endif
+
+ifeq ($(BR2_PACKAGE_MBEDTLS4),y)
+BCTOOLBOX4_DEPENDENCIES += mbedtls4
+BCTOOLBOX4_CONF_OPTS += -DENABLE_MBEDTLS=ON
+else
+BCTOOLBOX4_CONF_OPTS += -DENABLE_MBEDTLS=OFF
+endif
+
+ifeq ($(BR2_STATIC_LIBS),y)
+BCTOOLBOX4_CONF_OPTS += -DENABLE_SHARED=OFF -DENABLE_STATIC=ON
+else ifeq ($(BR2_SHARED_STATIC_LIBS),y)
+BCTOOLBOX4_CONF_OPTS += -DENABLE_SHARED=ON -DENABLE_STATIC=ON
+else ifeq ($(BR2_SHARED_LIBS),y)
+BCTOOLBOX4_CONF_OPTS += -DENABLE_SHARED=ON -DENABLE_STATIC=OFF
+endif
+
+$(eval $(cmake-package))

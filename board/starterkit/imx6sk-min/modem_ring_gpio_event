@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$2" = "0" ]; then
+    echo "Modem Ring! Pin=$1, value=$2"
+    echo 'ata' > /dev/ttymxc3
+    sleep 2
+    madplay /root/welcome.mp3
+    echo 'ath' > /dev/ttymxc3
+fi

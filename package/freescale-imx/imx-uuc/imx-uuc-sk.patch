@@ -1,0 +1,56 @@
+diff -uprN imx-uuc/sdimage.c imx-uuc-sk/sdimage.c
+--- imx-uuc/sdimage.c	2016-06-07 18:26:55.000000000 +0300
++++ imx-uuc-sk/sdimage.c	2018-03-16 10:33:34.613219846 +0300
+@@ -15,12 +15,20 @@
+  * with this program; if not, write to the Free Software Foundation, Inc.,
+  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  */
+-
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <unistd.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
++#include <syscall.h>
++#include <stdint.h>
+ #include <fcntl.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <sys/ioctl.h>
++#include <string.h>
++#include <malloc.h>
++#include <errno.h>
++#include <stdarg.h>
++
+ char *g_filedev;
+ char *g_firmware;
+ 
+diff -uprN imx-uuc/uu.c imx-uuc-sk/uu.c
+--- imx-uuc/uu.c	2016-06-07 18:26:55.000000000 +0300
++++ imx-uuc-sk/uu.c	2018-03-16 10:36:40.093212089 +0300
+@@ -27,6 +27,7 @@
+ #include <fcntl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#include <sys/ioctl.h>
+ #include <string.h>
+ #include <malloc.h>
+ #include <errno.h>
+@@ -87,6 +88,8 @@ struct utp_message {
+ static int utp_file = -1;
+ static FILE *utp_file_f = NULL;
+ 
++int is_child_dead(void);
++
+ static inline char *utp_answer_type(struct utp_message *u)
+ {
+ 	if (!u)
+@@ -144,7 +147,7 @@ static int utp_mk_devnode(char *class, c
+  *
+  * Start the subshell and execute the command passed
+  */
+-static utp_run(char *command, ... )
++static int utp_run(char *command, ... )
+ {
+ 	int r;
+ 	char cmd[1024];

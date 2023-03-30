@@ -1,0 +1,11 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -23,7 +23,7 @@
+ AS_CASE(["x${with_ns_mode}"],
+ 	["fixed"], [NS_FIXED=1],
+ 	["float"], [NS_FIXED=0],
+-	[NS_FIXED=0])
++	[NS_FIXED=1])
+ AM_CONDITIONAL(NS_FIXED, [test "x${NS_FIXED}" = "x1"])
+ 
+ 

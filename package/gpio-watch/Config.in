@@ -1,0 +1,6 @@
+config BR2_PACKAGE_GPIO_WATCH
+	bool "gpio-watch"
+	help
+	  gpio-watch is a tool for running scripts in response to GPIO events
+
+	  https://github.com/larsks/gpio-watch

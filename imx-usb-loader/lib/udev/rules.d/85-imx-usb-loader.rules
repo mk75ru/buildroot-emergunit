@@ -1,0 +1,5 @@
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="15a2", ATTR{idProduct}=="0054", RUN+="/lib/udev/imx-usb-loader/imx_usb /lib/udev/imx-usb-loader/uImage.imx6q"
+
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="15a2", ATTR{idProduct}=="0061", RUN+="/lib/udev/imx-usb-loader/imx_usb /lib/udev/imx-usb-loader/uImage.imx6dl"
+
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="15a2", ATTR{idProduct}=="0080", RUN+="/lib/udev/imx-usb-loader/imx_usb /lib/udev/imx-usb-loader/uImage.imx6ull"

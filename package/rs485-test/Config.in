@@ -1,0 +1,4 @@
+config BR2_PACKAGE_RS485_TEST
+	bool "rs485-test"
+	help
+	  rs485_test serial port test

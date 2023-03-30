@@ -1,0 +1,19 @@
+#!/bin/sh
+
+NAME=uuc
+DAEMON=/usr/bin/$NAME
+
+case "$1" in
+    start)
+	$DAEMON &
+	;;
+    stop)
+	;;
+    restart|reload)
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

@@ -1,0 +1,43 @@
+################################################################################
+#
+# belle-sip4
+#
+################################################################################
+
+BELLE_SIP4_VERSION = 4.4.8
+BELLE_SIP4_SITE = \
+	https://gitlab.linphone.org/BC/public/belle-sip/-/archive/$(BELLE_SIP4_VERSION)
+BELLE_SIP4_LICENSE = GPL-3.0+
+BELLE_SIP4_LICENSE_FILES = LICENSE.txt
+BELLE_SIP4_INSTALL_STAGING = YES
+BELLE_SIP4_DEPENDENCIES = \
+	bctoolbox4 \
+	$(if $(BR2_PACKAGE_ZLIB),zlib)
+BELLE_SIP4_CONF_OPTS = \
+	-DENABLE_STRICT=OFF \
+	-DENABLE_TESTS=OFF
+
+ifeq ($(BR2_PACKAGE_AVAHI_LIBDNSSD_COMPATIBILITY),y)
+BELLE_SIP4_CONF_OPTS += -DENABLE_MDNS=ON
+BELLE_SIP4_DEPENDENCIES += avahi
+else
+BELLE_SIP4_CONF_OPTS += -DENABLE_MDNS=OFF
+endif
+
+ifeq ($(BR2_STATIC_LIBS),y)
+BELLE_SIP4_CONF_OPTS += -DENABLE_SHARED=OFF -DENABLE_STATIC=ON
+else ifeq ($(BR2_SHARED_STATIC_LIBS),y)
+BELLE_SIP4_CONF_OPTS += -DENABLE_SHARED=ON -DENABLE_STATIC=ON
+else ifeq ($(BR2_SHARED_LIBS),y)
+BELLE_SIP4_CONF_OPTS += -DENABLE_SHARED=ON -DENABLE_STATIC=OFF
+endif
+
+BELLE_SIP_CFLAGS = $(TARGET_CFLAGS)
+
+ifeq ($(BR2_TOOLCHAIN_HAS_GCC_BUG_99140),y)
+BELLE_SIP4_CFLAGS += -O0
+endif
+
+BELLE_SIP4_CONF_OPTS += -DCMAKE_C_FLAGS="$(BELLE_SIP4_CFLAGS)"
+
+$(eval $(cmake-package))
