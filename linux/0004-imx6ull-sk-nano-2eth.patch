@@ -1,0 +1,71 @@
+--- a/arch/arm/boot/dts/imx6ull-sk-nano-2eth.dts	2020-10-08 19:25:40.000000000 +0700
++++ b/arch/arm/boot/dts/imx6ull-sk-nano-2eth.dts	2023-04-09 19:39:59.052816643 +0700
+@@ -142,10 +142,10 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	pcf8563@51 {
+-		compatible = "nxp,pcf8563";
+-		reg = <0x51>;
+-	};
++//	pcf8574@20 {
++//		compatible = "nxp,pcf8574";
++//		reg = <0x20>;
++//	};
+ };
+ 
+ &iomuxc {
+@@ -159,17 +159,24 @@
+ 				/* GPIO_4 */
+ 				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x80000000
+ 				/* SD CD */
+-				MX6UL_PAD_UART2_CTS_B__GPIO1_IO22   0x80000000
++				//MX6UL_PAD_UART2_CTS_B__GPIO1_IO22   0x80000000
+ 				MX6UL_PAD_LCD_DATA10__GPIO3_IO15	0x80000000
+ 				MX6UL_PAD_LCD_DATA11__GPIO3_IO16	0x80000000
+ 				/* GPIO_0/ADC */
+ 				/* MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x80000000 */
+ 				/* GPIO_1/ADC */
+-				/* MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0x80000000 */
++				MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0x0000B0B1  /* gled */
+ 				/* GPIO_2/I2C1_SCL */
+ 				/* MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x80000000 */
+ 				/* GPIO_3/I2C1_SDA */
+ 				/* MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x80000000 */
++
++                MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28 0x0000B0B1	/* bled */
++				MX6UL_PAD_UART5_RX_DATA__GPIO1_IO31 0x0000B0B1	/* rled */
++				MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30 0x0000B0B1	/* btn */
++				MX6UL_PAD_UART2_RTS_B__GPIO1_IO23	0x0000B0B1	/* codec ctl */
++				MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29 0x0000B0B1	/* amp ctl */
++				MX6UL_PAD_UART2_CTS_B__GPIO1_IO22	0x0000B0B1	/* ksz rst */
+ 			>;
+ 		};
+ 
+@@ -274,7 +281,7 @@
+ 			fsl,pins = <
+ 				MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX    0x1b0b1
+ 				MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX    0x1b0b1
+-				MX6UL_PAD_UART2_RTS_B__GPIO1_IO23        0x1b0b1
++				// MX6UL_PAD_UART2_RTS_B__GPIO1_IO23        0x1b0b1
+ 			>;
+ 		};
+ 
+@@ -365,7 +372,7 @@
+ &uart3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart3>;
+-	rts-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++	//rts-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
+ 
+@@ -404,7 +411,7 @@
+ &usdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc1>;
+-	cd-gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
++	//cd-gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
+ 	bus-width = <4>;
+ 	no-1-8-v;
+ 	vmmc-supply = <&reg_vref_3v3>;

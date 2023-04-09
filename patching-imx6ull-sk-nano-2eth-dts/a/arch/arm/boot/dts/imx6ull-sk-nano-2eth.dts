@@ -1,0 +1,421 @@
+/*
+ * Copyright (C) 2020 starterkit.ru
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include "imx6ull.dtsi"
+
+/ {
+	model = "Starterkit i.MX6 ULL Board";
+	compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull";
+
+	chosen {
+		stdout-path = &uart1;
+	};
+
+	memory {
+		reg = <0x80000000 0x10000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0x14000000>;
+			linux,cma-default;
+		};
+	};
+
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		reg_dvfs: regulator@1 {
+			compatible = "regulator-fixed";
+			regulator-name = "DVFS_1V4";
+			regulator-min-microvolt = <1400000>;
+			regulator-max-microvolt = <1400000>;
+		};
+
+		reg_vref_3v3: regulator@2 {
+			compatible = "regulator-fixed";
+			regulator-name = "vref-3v3";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+		};
+	};
+
+	sound-mqs {
+		compatible = "fsl,imx6ull-sk-mqs", "fsl,imx-audio-mqs";
+		model = "mqs-audio";
+		cpu-dai = <&sai1>;
+		asrc-controller = <&asrc>;
+		audio-codec = <&mqs>;
+	};
+};
+
+&adc1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_adc1>;
+	vref-supply = <&reg_vref_3v3>;
+	num-channels = <8>;
+	status = "okay";
+};
+
+&clks {
+	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+	assigned-clock-rates = <786432000>;
+};
+
+&cpu0 {
+	arm-supply = <&reg_arm>;
+	soc-supply = <&reg_soc>;
+	dc-supply = <&reg_dvfs>;
+};
+
+&fec1 {
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_enet1>;
+	pinctrl-1 = <&pinctrl_enet1_gpio>;
+	phy-mode = "rmii";
+	phy-reset-gpios = <&gpio5 1 0>;
+	phy-addr-gpios = <&gpio2 7 0>;
+	phy-handle = <&ethphy0>;
+	status = "okay";
+};
+
+&fec2 {
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_enet2>;
+	pinctrl-1 = <&pinctrl_enet2_gpio>;
+	phy-mode = "rmii";
+	phy-reset-gpios = <&gpio4 24 0>;
+	phy-addr-gpios = <&gpio2 15 0>;
+	phy-handle = <&ethphy1>;
+	status = "okay";
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy0: ethernet-phy@0 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <0>;
+		};
+
+		ethphy1: ethernet-phy@1 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <1>;
+		};
+	};
+};
+
+&flexcan1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_flexcan1>;
+	xceiver-supply = <&reg_vref_3v3>;
+	status = "okay";
+};
+
+&gpc {
+	fsl,cpu_pupscr_sw2iso = <0x1>;
+	fsl,cpu_pupscr_sw = <0x0>;
+	fsl,cpu_pdnscr_iso2sw = <0x1>;
+	fsl,cpu_pdnscr_iso = <0x1>;
+	fsl,ldo-bypass = <0>; /* DCDC, ldo-enable */
+};
+
+&i2c1 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c1>;
+	status = "okay";
+
+	pcf8563@51 {
+		compatible = "nxp,pcf8563";
+		reg = <0x51>;
+	};
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog_1>;
+	imx6ul-sk {
+		pinctrl_hog_1: hoggrp-1 {
+			fsl,pins = <
+				/* ETH2_RES */
+				MX6UL_PAD_CSI_DATA03__GPIO4_IO24    0x80000000
+				/* GPIO_4 */
+				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x80000000
+				/* SD CD */
+				MX6UL_PAD_UART2_CTS_B__GPIO1_IO22   0x80000000
+				MX6UL_PAD_LCD_DATA10__GPIO3_IO15	0x80000000
+				MX6UL_PAD_LCD_DATA11__GPIO3_IO16	0x80000000
+				/* GPIO_0/ADC */
+				/* MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x80000000 */
+				/* GPIO_1/ADC */
+				/* MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0x80000000 */
+				/* GPIO_2/I2C1_SCL */
+				/* MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x80000000 */
+				/* GPIO_3/I2C1_SDA */
+				/* MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x80000000 */
+			>;
+		};
+
+		pinctrl_adc1: adc1grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0xb0
+				MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
+			>;
+		};
+
+		pinctrl_enet1: enet1grp {
+			fsl,pins = <
+				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN         0x1b0b0
+				MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER         0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00    0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01    0x1b0b0
+				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN         0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00    0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01    0x1b0b0
+				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1     0x4001b031
+			>;
+		};
+
+		pinctrl_enet1_gpio: enet1gpiogrp {
+			fsl,pins = <
+				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN         0x1b0b0
+				MX6UL_PAD_ENET1_RX_ER__GPIO2_IO07          0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00    0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01    0x1b0b0
+				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN         0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00    0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01    0x1b0b0
+				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1     0x4001b031
+			>;
+		};
+
+		pinctrl_enet2: enet2grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO07__ENET2_MDC	           0x1b0b0
+				MX6UL_PAD_GPIO1_IO06__ENET2_MDIO           0x1b0b0
+				MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN         0x1b0b0
+				MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER         0x1b0b0
+				MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00    0x1b0b0
+				MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01    0x1b0b0
+				MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN         0x1b0b0
+				MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00    0x1b0b0
+				MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01    0x1b0b0
+				MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2     0x4001b031
+			>;
+		};
+
+		pinctrl_enet2_gpio: enet2gpiogrp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO07__ENET2_MDC	           0x1b0b0
+				MX6UL_PAD_GPIO1_IO06__ENET2_MDIO           0x1b0b0
+				MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN         0x1b0b0
+				MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15          0x1b0b0
+				MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00    0x1b0b0
+				MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01    0x1b0b0
+				MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN         0x1b0b0
+				MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00    0x1b0b0
+				MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01    0x1b0b0
+				MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2     0x4001b031
+			>;
+		};
+
+		pinctrl_flexcan1: flexcan1grp {
+			fsl,pins = <
+				MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX      0x1b020
+				MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX      0x1b020
+			>;
+		};
+
+		pinctrl_i2c1: i2c1grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO02__I2C1_SCL    0x4001b8b0
+				MX6UL_PAD_GPIO1_IO03__I2C1_SDA    0x4001b8b0
+			>;
+		};
+
+		pinctrl_mqs: mqsgrp {
+			fsl,pins = <
+				MX6UL_PAD_JTAG_TDI__MQS_LEFT    0x11088
+			>;
+		};
+
+		pinctrl_uart1: uart1grp {
+			fsl,pins = <
+				MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX    0x1b0b1
+				MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX    0x1b0b1
+			>;
+		};
+
+		pinctrl_uart2: uart2grp {
+			fsl,pins = <
+				MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX    0x1b0b1
+				MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX    0x1b0b1
+			>;
+		};
+
+		pinctrl_uart3: uart3grp {
+			fsl,pins = <
+				MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX    0x1b0b1
+				MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX    0x1b0b1
+				MX6UL_PAD_UART2_RTS_B__GPIO1_IO23        0x1b0b1
+			>;
+		};
+
+		pinctrl_uart4: uart4grp {
+			fsl,pins = <
+				MX6UL_PAD_UART4_TX_DATA__UART4_DCE_TX    0x1b0b1
+				MX6UL_PAD_UART4_RX_DATA__UART4_DCE_RX    0x1b0b1
+			>;
+		};
+
+		pinctrl_uart5: uart5grp {
+			fsl,pins = <
+				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX    0x1b0b1
+				MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX    0x1b0b1
+			>;
+		};
+
+		pinctrl_usdhc1: usdhc1grp {
+			fsl,pins = <
+				MX6UL_PAD_SD1_CMD__USDHC1_CMD        0x17059
+				MX6UL_PAD_SD1_CLK__USDHC1_CLK        0x10071
+				MX6UL_PAD_SD1_DATA0__USDHC1_DATA0    0x17059
+				MX6UL_PAD_SD1_DATA1__USDHC1_DATA1    0x17059
+				MX6UL_PAD_SD1_DATA2__USDHC1_DATA2    0x17059
+				MX6UL_PAD_SD1_DATA3__USDHC1_DATA3    0x17059
+			>;
+		};
+
+		pinctrl_usdhc2_8bit: usdhc2grp_8bit {
+			fsl,pins = <
+				MX6UL_PAD_NAND_RE_B__USDHC2_CLK        0x10069
+				MX6UL_PAD_NAND_WE_B__USDHC2_CMD        0x17059
+				MX6UL_PAD_NAND_DATA00__USDHC2_DATA0    0x17059
+				MX6UL_PAD_NAND_DATA01__USDHC2_DATA1    0x17059
+				MX6UL_PAD_NAND_DATA02__USDHC2_DATA2    0x17059
+				MX6UL_PAD_NAND_DATA03__USDHC2_DATA3    0x17059
+				MX6UL_PAD_NAND_DATA04__USDHC2_DATA4    0x17059
+				MX6UL_PAD_NAND_DATA05__USDHC2_DATA5    0x17059
+				MX6UL_PAD_NAND_DATA06__USDHC2_DATA6    0x17059
+				MX6UL_PAD_NAND_DATA07__USDHC2_DATA7    0x17059
+				MX6UL_PAD_NAND_ALE__USDHC2_RESET_B     0x170b0
+			>;
+		};
+	};
+};
+
+&iomuxc_snvs {
+	pinctrl-names = "default_snvs";
+	pinctrl-0 = <&pinctrl_hog_2>;
+	imx6ul-sk {
+		pinctrl_hog_2: hoggrp-2 {
+			fsl,pins = <
+				/* ETH_RES */
+				MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01    0x80000000
+			>;
+		};
+	};
+};
+
+&sai1 {
+	assigned-clocks = <&clks IMX6UL_CLK_SAI1_SEL>,
+			<&clks IMX6UL_CLK_SAI1>;
+	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+	assigned-clock-rates = <0>, <24576000>;
+	status = "okay";
+};
+
+&mqs {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_mqs>;
+	clocks = <&clks IMX6UL_CLK_SAI1>;
+	clock-names = "mclk";
+	status = "okay";
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+};
+
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
+	rts-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart4>;
+	status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5>;
+	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "host";
+	disable-over-current;
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+	disable-over-current;
+	status = "okay";
+};
+
+&usbphy1 {
+	tx-d-cal = <0x5>;
+};
+
+&usbphy2 {
+	tx-d-cal = <0x5>;
+};
+
+&usdhc1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	cd-gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
+	bus-width = <4>;
+	no-1-8-v;
+	vmmc-supply = <&reg_vref_3v3>;
+	status = "okay";
+};
+
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2_8bit>;
+	bus-width = <8>;
+	no-1-8-v;
+	non-removable;
+	status = "okay";
+};
