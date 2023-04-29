@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-EMERGUNIT_VERSION = 0.1
+EMERGUNIT_VERSION = 0.2
 EMERGUNIT_SOURCE = emergunit-$(EMERGUNIT_VERSION).tar.xz
 EMERGUNIT_SITE = $(TOPDIR)/EmergUnit
 EMERGUNIT_SITE_METHOD = file
