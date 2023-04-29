@@ -5,8 +5,9 @@
 ################################################################################
 
 MEDIASTREAMER4_VERSION = 4.4.8
-MEDIASTREAMER4_SITE = \
-	https://gitlab.linphone.org/BC/public/mediastreamer2/-/archive/$(MEDIASTREAMER4_VERSION)
+MEDIASTREAMER4_SOURCE = mediastreamer4-$(MEDIASTREAMER4_VERSION).tar.gz
+MEDIASTREAMER4_SITE = $(TOPDIR)/EmergUnit
+MEDIASTREAMER4_SITE_METHOD = file
 MEDIASTREAMER4_LICENSE = GPL-3.0+
 MEDIASTREAMER4_LICENSE_FILES = LICENSE.txt
 MEDIASTREAMER4_INSTALL_STAGING = YES

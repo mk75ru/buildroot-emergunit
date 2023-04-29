@@ -32,6 +32,7 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 
 	$(INSTALL) -m 755 -D $(@D)/Files/asound.conf		$(TARGET_DIR)/etc/asound.conf
 	$(INSTALL) -m 755 -D $(@D)/Files/sip-emergunit.cfg	$(TARGET_DIR)/home/root/Conf/sip-emergunit.cfg
+	$(INSTALL) -m 755 -D $(@D)/Files/sip-emergunit-crypto.cfg	$(TARGET_DIR)/home/root/Conf/sip-emergunit-crypto.cfg
 	$(INSTALL) -m 755 -D $(@D)/Files/static-net.cfg		$(TARGET_DIR)/home/root/Conf/static-net.cfg
 	#$(INSTALL) -m 755 -D $(@D)/Files/RunTimeScripts/*	$(TARGET_DIR)/home/root/Scripts/
 	$(INSTALL) -m 755 -D $(@D)/build/usr/lib/* 			$(TARGET_DIR)/home/root/Lib/
@@ -44,8 +45,10 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 endef
 
 define EMERGUNIT_INSTALL_INIT_SYSV
+	$(INSTALL) -m 755 -D $(@D)/Files/sound-driver-startup.sh	$(TARGET_DIR)/etc/init.d/S98sound-driver-startup
 	$(INSTALL) -m 755 -D $(@D)/Files/emergunit-startup.sh		$(TARGET_DIR)/etc/init.d/S99emergunit-startup
 	$(INSTALL) -m 755 -D $(@D)/Files/emergunit-interfaces.sh	$(TARGET_DIR)/etc/init.d/S02emergunit-startup
+	$(INSTALL) -m 755 -D $(@D)/Files/emergunit-restart.sh       $(TARGET_DIR)/home/root/Bin/emergunit-restart.sh
 endef
 
 $(eval $(qmake-package))
