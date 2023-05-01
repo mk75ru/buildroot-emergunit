@@ -42,6 +42,7 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/docroot/style/*	$(TARGET_DIR)/home/root/Wtgui/docroot/style/
 	$(INSTALL) -m 755 -D $(@D)/Files/busy.wav			$(TARGET_DIR)/home/root/Sound/
 	$(INSTALL) -m 755 -D $(@D)/Files/speak.wav			$(TARGET_DIR)/home/root/Sound/
+	$(INSTALL) -m 755 -D $(@D)/Files/terminate.wav		$(TARGET_DIR)/home/root/Sound/
 endef
 
 define EMERGUNIT_INSTALL_INIT_SYSV
