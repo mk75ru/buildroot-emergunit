@@ -47,6 +47,7 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 endef
 
 define EMERGUNIT_INSTALL_INIT_SYSV
+        $(INSTALL) -m 755 -D $(@D)/Files/emergunit_restart-daemon.sh    $(TARGET_DIR)/etc/init.d/S97emergunit_restart-daemon
 	$(INSTALL) -m 755 -D $(@D)/Files/sound-driver-startup.sh	$(TARGET_DIR)/etc/init.d/S98sound-driver-startup
 	$(INSTALL) -m 755 -D $(@D)/Files/emergunit-startup.sh		$(TARGET_DIR)/etc/init.d/S99emergunit-startup
 	$(INSTALL) -m 755 -D $(@D)/Files/emergunit-interfaces.sh	$(TARGET_DIR)/etc/init.d/S02emergunit-startup
