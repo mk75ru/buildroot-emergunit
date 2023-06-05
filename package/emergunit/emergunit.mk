@@ -37,13 +37,19 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 	#$(INSTALL) -m 755 -D $(@D)/Files/RunTimeScripts/*	$(TARGET_DIR)/home/root/Scripts/
 	$(INSTALL) -m 755 -D $(@D)/build/usr/lib/* 			$(TARGET_DIR)/home/root/Lib/
 	$(INSTALL) -m 755 -D $(@D)/build/usr/bin/*			$(TARGET_DIR)/home/root/Bin/
+	$(INSTALL) -m 755 -D $(@D)/Files/snmacgen.sh	    $(TARGET_DIR)/home/root/Bin/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/approot/*			$(TARGET_DIR)/home/root/Wtgui/approot/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/docroot/pics/*		$(TARGET_DIR)/home/root/Wtgui/docroot/pics/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/docroot/style/*	$(TARGET_DIR)/home/root/Wtgui/docroot/style/
 	$(INSTALL) -m 755 -D $(@D)/Files/busy.wav			$(TARGET_DIR)/home/root/Sound/
 	$(INSTALL) -m 755 -D $(@D)/Files/speak.wav			$(TARGET_DIR)/home/root/Sound/
 	$(INSTALL) -m 755 -D $(@D)/Files/terminate.wav		$(TARGET_DIR)/home/root/Sound/
-	$(INSTALL) -m 755 -D $(@D)/Files/soundcheck.wav		$(TARGET_DIR)/home/root/Sound/	
+	$(INSTALL) -m 755 -D $(@D)/Files/soundcheck.wav		$(TARGET_DIR)/home/root/Sound/
+	$(INSTALL) -m 644 -D $(@D)/Files/passwd	        	$(TARGET_DIR)/etc/
+	$(INSTALL) -m 644 -D $(@D)/Files/passwd-	    	$(TARGET_DIR)/etc/
+
+
+
 endef
 
 define EMERGUNIT_INSTALL_INIT_SYSV
