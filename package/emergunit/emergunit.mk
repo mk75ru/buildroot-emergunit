@@ -38,6 +38,7 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -D $(@D)/build/usr/lib/* 			$(TARGET_DIR)/home/root/Lib/
 	$(INSTALL) -m 755 -D $(@D)/build/usr/bin/*			$(TARGET_DIR)/home/root/Bin/
 	$(INSTALL) -m 755 -D $(@D)/Files/snmacgen.sh	    $(TARGET_DIR)/home/root/Bin/
+	$(INSTALL) -m 755 -D $(@D)/Files/update.sh	        $(TARGET_DIR)/home/root/Bin/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/approot/*			$(TARGET_DIR)/home/root/Wtgui/approot/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/docroot/pics/*		$(TARGET_DIR)/home/root/Wtgui/docroot/pics/
 	$(INSTALL) -m 755 -D $(@D)/wtgui/src/wrc/docroot/style/*	$(TARGET_DIR)/home/root/Wtgui/docroot/style/
