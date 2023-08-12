@@ -46,6 +46,7 @@ define EMERGUNIT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -D $(@D)/Files/speak.wav			$(TARGET_DIR)/home/root/Sound/
 	$(INSTALL) -m 755 -D $(@D)/Files/terminate.wav		$(TARGET_DIR)/home/root/Sound/
 	$(INSTALL) -m 755 -D $(@D)/Files/soundcheck.wav		$(TARGET_DIR)/home/root/Sound/
+	$(INSTALL) -m 755 -D $(@D)/Files/version		    $(TARGET_DIR)/home/root/version
 	$(INSTALL) -m 644 -D $(@D)/Files/passwd	        	$(TARGET_DIR)/etc/
 	$(INSTALL) -m 644 -D $(@D)/Files/passwd-	    	$(TARGET_DIR)/etc/
 	$(INSTALL) -m 600 -D $(@D)/Files/shadow	        	$(TARGET_DIR)/etc/
