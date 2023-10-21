@@ -1,0 +1,12 @@
+--- a/src/belle_sip_resolver.c	2020-11-05 00:10:40.000000000 +0700
++++ b/src/belle_sip_resolver.c	2023-10-21 17:09:33.672668401 +0700
+@@ -412,6 +412,9 @@
+ 		}
+ 	}
+ 
++	path = "/etc/resolv.conf";
++	error = dns_resconf_loadpath(ctx->resconf, path);
++
+ 	if (error==0){
+ 		char ip[64];
+ 		char serv[10];
